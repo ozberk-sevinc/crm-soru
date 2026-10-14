@@ -1,0 +1,57 @@
+name: Implementation checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  backend:
+    name: Go API and question bank
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: backend/go.mod
+          cache: true
+          cache-dependency-path: backend/go.sum
+      - name: Formatting
+        run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: go test -race -cover ./...
+      - run: go run ./cmd/server validate-bank
+      - run: go build ./cmd/server
+  mobile:
+    name: Mobile types, tests and platform bundles
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      EXPO_PUBLIC_API_URL: https://api.example.com
+      CI: '1'
+      # Syntactic placeholders validate native plugin setup only; no real login occurs in CI.
+      EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: ci-web.apps.googleusercontent.com
+      EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: ci-ios.apps.googleusercontent.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - run: npx expo install --check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run format:check
+      - run: npx expo prebuild --no-install
+      - run: npm run export:android
+      - run: npm run export:ios

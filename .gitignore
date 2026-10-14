@@ -1,0 +1,14 @@
+node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/android/
+mobile/ios/
+.env
+.env.*
+!.env.example
+backend/var/
+backend/server
+*.apk
+*.aab
+*.ipa
+*.log
