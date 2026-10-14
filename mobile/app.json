@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Otranto Soru",
+    "slug": "crm-soru",
+    "version": "1.0.0",
+    "scheme": "otrantosoru",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.otrantoconnect.soru",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.otrantoconnect.soru"
+    },
+    "plugins": ["expo-secure-store", "expo-notifications", "expo-status-bar"],
+    "extra": {
+      "sampleQuestions": true
+    }
+  }
+}

@@ -1,0 +1,1092 @@
+{
+  "version": 1,
+  "outcomes": [
+    {
+      "id": "bio.cell",
+      "subject": "Biology",
+      "title": "Cell organelles",
+      "remember": "Mitochondria produce most aerobic ATP; ribosomes build proteins; the nucleus contains DNA."
+    },
+    {
+      "id": "bio.genetics",
+      "subject": "Biology",
+      "title": "Mendelian inheritance",
+      "remember": "An Aa × Aa cross has genotype ratio 1 AA : 2 Aa : 1 aa. A recessive phenotype requires aa."
+    },
+    {
+      "id": "bio.enzymes",
+      "subject": "Biology",
+      "title": "Enzymes and reactions",
+      "remember": "Enzymes lower activation energy. They do not change the equilibrium or become consumed."
+    },
+    {
+      "id": "chem.moles",
+      "subject": "Chemistry",
+      "title": "Moles and molar mass",
+      "remember": "Amount in moles = mass in grams / molar mass in grams per mole."
+    },
+    {
+      "id": "chem.ph",
+      "subject": "Chemistry",
+      "title": "pH of strong acids",
+      "remember": "For a dilute strong monoprotic acid, pH = −log₁₀[H⁺]."
+    },
+    {
+      "id": "chem.bonds",
+      "subject": "Chemistry",
+      "title": "Chemical bonds",
+      "remember": "Ionic bonding involves electron transfer; covalent bonding involves shared electron pairs."
+    },
+    {
+      "id": "phys.motion",
+      "subject": "Physics",
+      "title": "Constant acceleration",
+      "remember": "For constant acceleration, v = u + at and displacement = ut + ½at²."
+    },
+    {
+      "id": "phys.electricity",
+      "subject": "Physics",
+      "title": "Ohm’s law",
+      "remember": "For an ohmic resistor, voltage = current × resistance. Keep units in volts, amperes and ohms."
+    },
+    {
+      "id": "math.algebra",
+      "subject": "Mathematics",
+      "title": "Linear and quadratic equations",
+      "remember": "Apply the same operation to both sides. Check solutions by substitution."
+    },
+    {
+      "id": "math.probability",
+      "subject": "Mathematics",
+      "title": "Probability",
+      "remember": "For equally likely outcomes, probability = favourable outcomes / total outcomes."
+    },
+    {
+      "id": "math.percent",
+      "subject": "Mathematics",
+      "title": "Percentage change",
+      "remember": "An increase of r% multiplies a value by 1 + r/100. Consecutive changes multiply."
+    },
+    {
+      "id": "logic.deduction",
+      "subject": "Logic",
+      "title": "Valid deductions",
+      "remember": "A conclusion must follow from the premises. “Some” does not mean “all”."
+    }
+  ],
+  "questions": [
+    {
+      "id": "imat-cell-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "Which organelle produces most ATP during aerobic respiration in a eukaryotic cell?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Nucleus",
+          "misconception": "The nucleus stores DNA; it is not the main site of aerobic ATP production.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "Mitochondrion"
+        },
+        {
+          "id": "C",
+          "text": "Ribosome",
+          "misconception": "Ribosomes synthesise proteins, not ATP.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Golgi apparatus",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Lysosome",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "The inner mitochondrial membrane hosts the electron transport chain and ATP synthase.",
+      "outcome_ids": [
+        "bio.cell"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "imat-genetics-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "Two heterozygous parents (Aa × Aa) have a child. What is the probability of genotype aa?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0%",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "25%"
+        },
+        {
+          "id": "C",
+          "text": "50%",
+          "misconception": "The heterozygous genotype has probability 50%; aa has probability 25%.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "75%",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "100%",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "The four equally likely combinations are AA, Aa, aA and aa. One of four is aa.",
+      "outcome_ids": [
+        "bio.genetics"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "imat-enzyme-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "How does an enzyme increase the rate of a reaction?",
+      "options": [
+        {
+          "id": "A",
+          "text": "It raises activation energy",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "It lowers activation energy"
+        },
+        {
+          "id": "C",
+          "text": "It changes the equilibrium constant",
+          "misconception": "An enzyme affects rate, not the equilibrium constant.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "It is consumed as fuel",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "It prevents product formation",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "An enzyme provides a reaction pathway with lower activation energy; the equilibrium is unchanged.",
+      "outcome_ids": [
+        "bio.enzymes"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "imat-moles-01",
+      "exam": "IMAT",
+      "type": "numeric",
+      "subject": "Chemistry",
+      "prompt": "How many moles are in 18 g of water? Use molar mass 18 g/mol.",
+      "answer": {
+        "value": 1,
+        "tolerance": 0.001
+      },
+      "explanation": "n = m / M = 18 / 18 = 1 mol.",
+      "outcome_ids": [
+        "chem.moles"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "imat-ph-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Chemistry",
+      "prompt": "Assume complete dissociation. What is the pH of 0.001 mol/L HCl?",
+      "options": [
+        {
+          "id": "A",
+          "text": "1",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "2",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "3"
+        },
+        {
+          "id": "D",
+          "text": "7",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "11",
+          "misconception": "A strong acid has low pH; 11 would describe a basic solution.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "C"
+      },
+      "explanation": "[H⁺] = 10⁻³ mol/L, so pH = −log₁₀(10⁻³) = 3.",
+      "outcome_ids": [
+        "chem.ph"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "imat-bond-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Chemistry",
+      "prompt": "Which description best represents a covalent bond?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Transfer of protons",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "Sharing of electron pairs"
+        },
+        {
+          "id": "C",
+          "text": "Attraction between two neutrons",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Complete transfer of every electron",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Fusion of atomic nuclei",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "A covalent bond involves a shared pair of electrons between atoms.",
+      "outcome_ids": [
+        "chem.bonds"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "imat-motion-01",
+      "exam": "IMAT",
+      "type": "numeric",
+      "subject": "Physics",
+      "prompt": "A car starts from rest and accelerates at 2 m/s² for 4 s. What is its final speed in m/s?",
+      "answer": {
+        "value": 8,
+        "tolerance": 0.001
+      },
+      "explanation": "v = u + at = 0 + 2 × 4 = 8 m/s.",
+      "outcome_ids": [
+        "phys.motion"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "imat-prob-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Mathematics",
+      "prompt": "A fair six-sided die is rolled once. What is the probability of an even result?",
+      "options": [
+        {
+          "id": "A",
+          "text": "1/6",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "1/3",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "1/2"
+        },
+        {
+          "id": "D",
+          "text": "2/3",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "5/6",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "C"
+      },
+      "explanation": "There are three even results (2, 4, 6) out of six equally likely outcomes: 3/6 = 1/2.",
+      "outcome_ids": [
+        "math.probability"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolci-algebra-01",
+      "exam": "TOLC-I",
+      "type": "single_choice",
+      "subject": "Mathematics",
+      "prompt": "Solve 3x + 5 = 20.",
+      "options": [
+        {
+          "id": "A",
+          "text": "3",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.algebra"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "5"
+        },
+        {
+          "id": "C",
+          "text": "8",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.algebra"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "15",
+          "misconception": "15 is 3x. You must still divide by 3.",
+          "outcome_ids": [
+            "math.algebra"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "25",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.algebra"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "Subtract 5 to obtain 3x = 15; divide by 3 to obtain x = 5.",
+      "outcome_ids": [
+        "math.algebra"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolci-percent-01",
+      "exam": "TOLC-I",
+      "type": "numeric",
+      "subject": "Mathematics",
+      "prompt": "A book costs €40. Its price increases by 10%. What is the new price in euros?",
+      "answer": {
+        "value": 44,
+        "tolerance": 0.001
+      },
+      "explanation": "40 × 1.10 = 44 euros.",
+      "outcome_ids": [
+        "math.percent"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "tolci-prob-01",
+      "exam": "TOLC-I",
+      "type": "single_choice",
+      "subject": "Mathematics",
+      "prompt": "A bag has 3 red and 2 blue balls. One ball is chosen uniformly at random. What is P(red)?",
+      "options": [
+        {
+          "id": "A",
+          "text": "2/5",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "3/5"
+        },
+        {
+          "id": "C",
+          "text": "1/2",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "3/2",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "1/5",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.probability"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "Three favourable outcomes out of five balls gives P(red) = 3/5.",
+      "outcome_ids": [
+        "math.probability"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolci-logic-01",
+      "exam": "TOLC-I",
+      "type": "single_choice",
+      "subject": "Logic",
+      "prompt": "All squares are rectangles. All rectangles have four sides. Which conclusion follows?",
+      "options": [
+        {
+          "id": "A",
+          "text": "All four-sided shapes are squares",
+          "misconception": "The implication cannot be reversed: four-sided shapes need not be squares.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "All rectangles are squares",
+          "misconception": "Squares are a subset of rectangles; the reverse is not guaranteed.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "All squares have four sides"
+        },
+        {
+          "id": "D",
+          "text": "No squares are rectangles",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Some squares have three sides",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "C"
+      },
+      "explanation": "The properties pass from rectangles to their subset, squares. The reverse implication does not follow.",
+      "outcome_ids": [
+        "logic.deduction"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolci-motion-01",
+      "exam": "TOLC-I",
+      "type": "numeric",
+      "subject": "Physics",
+      "prompt": "An object moves at a constant speed of 6 m/s for 5 s. How far does it travel in metres?",
+      "answer": {
+        "value": 30,
+        "tolerance": 0.001
+      },
+      "explanation": "At constant speed, distance = speed × time = 6 × 5 = 30 m.",
+      "outcome_ids": [
+        "phys.motion"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "tolci-electric-01",
+      "exam": "TOLC-I",
+      "type": "single_choice",
+      "subject": "Physics",
+      "prompt": "A 6 Ω resistor carries 2 A. What voltage is across it?",
+      "options": [
+        {
+          "id": "A",
+          "text": "3 V",
+          "misconception": "Dividing resistance by current is not Ohm’s law for voltage.",
+          "outcome_ids": [
+            "phys.electricity"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "4 V",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "phys.electricity"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "8 V",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "phys.electricity"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "12 V"
+        },
+        {
+          "id": "E",
+          "text": "24 V",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "phys.electricity"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "D"
+      },
+      "explanation": "Ohm’s law gives V = IR = 2 × 6 = 12 V.",
+      "outcome_ids": [
+        "phys.electricity"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolci-algebra-02",
+      "exam": "TOLC-I",
+      "type": "numeric",
+      "subject": "Mathematics",
+      "prompt": "What is the positive solution of x² = 49?",
+      "answer": {
+        "value": 7,
+        "tolerance": 0.001
+      },
+      "explanation": "Both +7 and −7 square to 49. The requested positive solution is 7.",
+      "outcome_ids": [
+        "math.algebra"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "tolci-percent-02",
+      "exam": "TOLC-I",
+      "type": "single_choice",
+      "subject": "Mathematics",
+      "prompt": "A price rises by 10% and then falls by 10%. Compared with the original price, it is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "Unchanged",
+          "misconception": "The percentages act on different starting amounts, so they do not cancel.",
+          "outcome_ids": [
+            "math.percent"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "1% lower"
+        },
+        {
+          "id": "C",
+          "text": "1% higher",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.percent"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "10% lower",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.percent"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "20% higher",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "math.percent"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "The multiplier is 1.10 × 0.90 = 0.99, so the final price is 1% lower.",
+      "outcome_ids": [
+        "math.percent"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-cell-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "Where does protein synthesis occur?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Ribosomes"
+        },
+        {
+          "id": "B",
+          "text": "Lysosomes",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "Golgi vesicles only",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Centrioles",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Cell wall",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "A"
+      },
+      "explanation": "Ribosomes translate messenger RNA into polypeptide chains.",
+      "outcome_ids": [
+        "bio.cell"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-genetics-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "For Aa × aa, what fraction of offspring is expected to be aa?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "1/4",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "1/2"
+        },
+        {
+          "id": "D",
+          "text": "3/4",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "1",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.genetics"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "C"
+      },
+      "explanation": "The first parent contributes A or a; the second always contributes a. Aa and aa are equally likely.",
+      "outcome_ids": [
+        "bio.genetics"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-enzyme-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "After catalysing a reaction, an enzyme is generally:",
+      "options": [
+        {
+          "id": "A",
+          "text": "Permanently consumed",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "Available to catalyse another reaction"
+        },
+        {
+          "id": "C",
+          "text": "Converted into the product",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Always denatured",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Changed into DNA",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.enzymes"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "Enzymes participate in catalysis but are regenerated and can act again.",
+      "outcome_ids": [
+        "bio.enzymes"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-moles-01",
+      "exam": "TOLC-F",
+      "type": "numeric",
+      "subject": "Chemistry",
+      "prompt": "How many moles are in 44 g of CO₂? Use molar mass 44 g/mol.",
+      "answer": {
+        "value": 1,
+        "tolerance": 0.001
+      },
+      "explanation": "n = m / M = 44 / 44 = 1 mol.",
+      "outcome_ids": [
+        "chem.moles"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "tolcf-ph-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Chemistry",
+      "prompt": "Assuming complete dissociation, 0.01 mol/L HCl has pH:",
+      "options": [
+        {
+          "id": "A",
+          "text": "0",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "1",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "2"
+        },
+        {
+          "id": "D",
+          "text": "7",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "12",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.ph"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "C"
+      },
+      "explanation": "0.01 = 10⁻², so pH = −log₁₀(10⁻²) = 2.",
+      "outcome_ids": [
+        "chem.ph"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-bond-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Chemistry",
+      "prompt": "In a simple model of sodium chloride formation, sodium:",
+      "options": [
+        {
+          "id": "A",
+          "text": "Gains one electron",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "Loses one electron"
+        },
+        {
+          "id": "C",
+          "text": "Gains one proton",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Loses one neutron",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Shares a nucleus with chlorine",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "chem.bonds"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "Sodium loses an electron to form Na⁺; chlorine gains it to form Cl⁻.",
+      "outcome_ids": [
+        "chem.bonds"
+      ],
+      "difficulty": "easy"
+    },
+    {
+      "id": "tolcf-electric-01",
+      "exam": "TOLC-F",
+      "type": "numeric",
+      "subject": "Physics",
+      "prompt": "A 10 Ω resistor has 5 V across it. What is the current in amperes?",
+      "answer": {
+        "value": 0.5,
+        "tolerance": 0.001
+      },
+      "explanation": "I = V / R = 5 / 10 = 0.5 A.",
+      "outcome_ids": [
+        "phys.electricity"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "tolcf-logic-01",
+      "exam": "TOLC-F",
+      "type": "single_choice",
+      "subject": "Logic",
+      "prompt": "All pharmacists studied chemistry. Alex is a pharmacist. What follows?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Alex studied chemistry"
+        },
+        {
+          "id": "B",
+          "text": "Everyone who studied chemistry is a pharmacist",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "C",
+          "text": "Alex never studied biology",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Alex is a doctor",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "No conclusion follows",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "logic.deduction"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "A"
+      },
+      "explanation": "Alex belongs to the group for which studying chemistry is stated; therefore Alex studied chemistry.",
+      "outcome_ids": [
+        "logic.deduction"
+      ],
+      "difficulty": "easy"
+    }
+  ]
+}
