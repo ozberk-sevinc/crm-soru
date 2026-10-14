@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 	_ "time/tzdata"
@@ -34,11 +35,30 @@ func main() {
 	}
 	demo := os.Getenv("DEMO_MODE") == "true"
 	admin := os.Getenv("ADMIN_TOKEN")
-	if !demo && len(admin) < 32 {
-		log.Fatal("Set ADMIN_TOKEN to a random value of at least 32 characters, or explicitly enable DEMO_MODE for local development")
+	verifier, err := practice.NewGoogleVerifier(strings.Split(os.Getenv("GOOGLE_CLIENT_IDS"), ","))
+	if err != nil {
+		log.Fatal(err)
 	}
-	api := &practice.API{Bank: bank, Store: store, AdminToken: admin, Demo: demo}
-	server := &http.Server{Addr: env("LISTEN_ADDR", "127.0.0.1:8080"), Handler: api.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16 * 1024}
+	adminEmails := map[string]bool{}
+	for _, email := range strings.Split(os.Getenv("GOOGLE_ADMIN_EMAILS"), ",") {
+		if email = strings.ToLower(strings.TrimSpace(email)); email != "" {
+			adminEmails[email] = true
+		}
+	}
+	adminSubjects := map[string]bool{}
+	for _, subject := range strings.Split(os.Getenv("GOOGLE_ADMIN_SUBJECTS"), ",") {
+		if subject = strings.TrimSpace(subject); subject != "" {
+			adminSubjects[subject] = true
+		}
+	}
+	if !demo && len(admin) < 32 && (verifier == nil || len(adminEmails)+len(adminSubjects) == 0) {
+		log.Fatal("Configure Google client IDs and an admin allowlist, or set a random ADMIN_TOKEN of at least 32 characters. DEMO_MODE is for local development only.")
+	}
+	api := &practice.API{Bank: bank, Store: store, AdminToken: admin, Demo: demo, VerifyGoogle: verifier, GoogleAdminEmails: adminEmails, GoogleAdminSubjects: adminSubjects}
+	if err = api.ValidatePublished(); err != nil {
+		log.Fatal("Invalid published question bank: ", err)
+	}
+	server := &http.Server{Addr: env("LISTEN_ADDR", "127.0.0.1:8080"), Handler: api.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 60 * time.Second, WriteTimeout: 60 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16 * 1024}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	go func() {

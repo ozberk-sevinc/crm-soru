@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "outcomes": [],
+  "questions": [
+    {
+      "id": "import-demo-cell-01",
+      "exam": "IMAT",
+      "type": "single_choice",
+      "subject": "Biology",
+      "prompt": "Which organelle produces most ATP during aerobic respiration in a eukaryotic cell?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Nucleus",
+          "misconception": "The nucleus stores DNA; it is not the main site of aerobic ATP production.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "B",
+          "text": "Mitochondrion"
+        },
+        {
+          "id": "C",
+          "text": "Ribosome",
+          "misconception": "Ribosomes synthesise proteins, not ATP.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "D",
+          "text": "Golgi apparatus",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        },
+        {
+          "id": "E",
+          "text": "Lysosome",
+          "misconception": "This answer does not follow the rule for this learning outcome.",
+          "outcome_ids": [
+            "bio.cell"
+          ]
+        }
+      ],
+      "answer": {
+        "option_id": "B"
+      },
+      "explanation": "The inner mitochondrial membrane hosts the electron transport chain and ATP synthase.",
+      "outcome_ids": [
+        "bio.cell"
+      ],
+      "difficulty": "easy"
+    }
+  ]
+}

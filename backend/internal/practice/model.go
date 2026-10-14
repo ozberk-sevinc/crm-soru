@@ -51,10 +51,14 @@ type Bank struct {
 	Questions []Question `json:"questions"`
 }
 type Student struct {
-	ID         string `json:"id"`
-	Name       string `json:"name"`
-	Timezone   string `json:"timezone"`
-	InviteHash string `json:"invite_hash,omitempty"`
+	ID                       string `json:"id"`
+	Name                     string `json:"name"`
+	Timezone                 string `json:"timezone"`
+	InviteHash               string `json:"invite_hash,omitempty"`
+	Email                    string `json:"email,omitempty"`
+	Role                     string `json:"role"`
+	GoogleSubject            string `json:"google_subject,omitempty"`
+	GoogleEmailAuthoritative bool   `json:"google_email_authoritative,omitempty"`
 }
 type Session struct {
 	StudentID string    `json:"student_id"`

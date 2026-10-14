@@ -7,6 +7,10 @@
 - TypeScript checks, Expo SDK dependency checks, native project generation and Android/iOS JavaScript bundle exports verify type consistency, installed module resolution and plugin configuration. They do not validate signed native builds or notification delivery.
 - A live HTTP smoke check exercises enrollment, daily questions, submission and the resulting performance against a running Go API.
 
+New Google/upload tests also cover one-time invitation linking, returning Google identities, exact server-controlled admin roles, removed admin access, unauthoritative-email rejection for admin promotion, invalid audience/issuer/expiry/email claims, malformed Google tokens, pending-only submissions, admin-only previews/decisions, ZIP and split-folder parsing, traversal/symlink/expanded-size rejection, upload/decision idempotency, question conflicts, atomic disk-failure rollback, restart publication and migration of existing progress files.
+
+Native project generation with syntactically valid CI-only Google client IDs verifies plugin/URL-scheme configuration. Actual OAuth consent, certificate registration, Google account sign-in and native file-provider behaviour remain unverified without real credentials/devices.
+
 ## Dependency audit
 
 An npm audit of the installed Expo 57 toolchain reports upstream advisories for **braces**, **node-forge**, and the older **uuid** used by native project tooling. The high-severity root findings affect build/tool dependencies, and npm currently reports no patched versions for braces/node-forge. Its proposed forced fix downgrades Expo to SDK 44, which is incompatible with this application and was not applied. Do not claim that the dependency audit is clean. Dependabot is configured so compatible upstream updates can be reviewed.

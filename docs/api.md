@@ -1,6 +1,6 @@
 # API contracts
 
-All `/v1` responses are JSON with `Cache-Control: no-store`. Student endpoints require `Authorization: Bearer <device-token>`. Students cannot select another student ID to read or alter progress. Unknown/missing exams return 400; missing/expired sessions return 401. Error bodies contain an `error` string.
+All `/v1` responses are JSON with `Cache-Control: no-store`. Student endpoints require `Authorization: Bearer <device-token>`. Verified Google sign-in and moderated uploads are documented in [google-and-imports.md](google-and-imports.md). Students cannot select another student ID to read or alter progress. Unknown/missing exams return 400; missing/expired sessions return 401. Error bodies contain an `error` string.
 
 | Method | Path | Purpose |
 | --- | --- | --- |
@@ -47,6 +47,6 @@ Reflections use `reason` (`knowledge_gap`, `misread`, `calculation`, `time_press
 - Put the API behind HTTPS, set `ADMIN_TOKEN` securely, and restrict `/v1/admin/*` at the reverse proxy to trusted administrative access where possible.
 - Request bodies and headers are bounded; the API uses timeouts and an in-process 120 requests/minute limiter. This is basic protection, not a substitute for edge rate limits. It does not trust forwarded client-IP headers.
 - No browser CORS is enabled. The app is native iOS/Android; a future browser client needs an explicit permitted-origin design.
-- No built-in bulk import, consultant dashboard, CRM SSO, remote push service or multi-tenant firm management. These are separate extensions to this focused student application.
-- Invites remain valid until consumed or rotated; device sessions expire after 90 days. Consultants reissue invites for recovery/renewal. There is no automatic refresh-token flow.
+- Moderated ZIP/folder JSON imports are implemented. No consultant dashboard, CRM SSO, remote push service or multi-tenant firm management. These are separate extensions to this focused student application.
+- Invites remain valid until consumed or rotated; device sessions expire after 90 days. Google-linked users can sign in again; consultants reissue invites for invite-only recovery/renewal. There is no automatic refresh-token flow.
 - Progress and question snapshots are stored until the consultancy removes them. Back up the volume and define your own retention policy before onboarding real students.

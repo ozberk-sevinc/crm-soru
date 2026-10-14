@@ -10,6 +10,7 @@ import {
   Section,
 } from "../components/ui";
 import { api, configurationError } from "../lib/api";
+import { googleConfigured, googleIDToken } from "../lib/google";
 import { saveToken } from "../lib/storage";
 import type { Student } from "../lib/types";
 
@@ -30,6 +31,25 @@ export function Welcome({
       onEnroll(result.token, result.student);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not sign in. Retry.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function google() {
+    setBusy(true);
+    setError("");
+    try {
+      const idToken = await googleIDToken();
+      if (!idToken) return;
+      const timezone =
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome";
+      const result = await api.google(idToken, code.trim(), timezone);
+      await saveToken(result.token);
+      onEnroll(result.token, result.student);
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Google sign-in failed. Please retry.",
+      );
     } finally {
       setBusy(false);
     }
@@ -61,12 +81,26 @@ export function Welcome({
         </Card>
         <Section title="Join your study space">
           <Label muted>
-            Enter the one-time invite code provided by your consultancy.
+            Use Google to sign in. If you already have a consultancy account,
+            enter its invite code below before your first Google sign-in to keep
+            your history.
           </Label>
         </Section>
+        <Button
+          title="Continue with Google"
+          loading={busy}
+          disabled={!googleConfigured() || !!configurationError()}
+          onPress={() => void google()}
+        />
+        {!googleConfigured() && (
+          <Label muted size={13}>
+            Google sign-in needs the consultancy’s OAuth configuration. Invite
+            sign-in is available below.
+          </Label>
+        )}
         <Field
           accessibilityLabel="Invite code"
-          placeholder="Your invite code"
+          placeholder="Invite code (optional for Google)"
           autoCapitalize="none"
           autoCorrect={false}
           value={code}
@@ -80,7 +114,7 @@ export function Welcome({
           <ErrorNotice message={error || configurationError()!} />
         )}
         <Button
-          title="Start learning"
+          title="Continue with invite code"
           loading={busy}
           disabled={!code.trim() || !!configurationError()}
           onPress={() => void enroll()}

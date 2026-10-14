@@ -5,6 +5,8 @@ export interface Student {
   id: string;
   name: string;
   timezone: string;
+  email?: string;
+  role: "student" | "admin";
 }
 export interface Outcome {
   id: string;
@@ -89,3 +91,34 @@ export const reasons: { id: MistakeReason; title: string }[] = [
   { id: "time_pressure", title: "I felt rushed" },
   { id: "guess", title: "I guessed" },
 ];
+
+export interface ImportSummary {
+  id: string;
+  title: string;
+  source: string;
+  files: string[];
+  status: "pending" | "approved" | "rejected";
+  uploader_id: string;
+  uploader_name: string;
+  question_count: number;
+  outcome_count: number;
+  exams: string[];
+  created_at: string;
+  reviewed_at?: string;
+  review_note: string;
+}
+export interface BankQuestion extends Omit<Question, "outcomes" | "options"> {
+  options?: (Option & { misconception?: string; outcome_ids?: string[] })[];
+  answer: { option_id?: string; value?: number; tolerance?: number };
+  outcome_ids: string[];
+  explanation: string;
+}
+export interface QuestionBank {
+  version: number;
+  outcomes: Outcome[];
+  questions: BankQuestion[];
+}
+export interface ImportDetail {
+  summary: ImportSummary;
+  bank: QuestionBank;
+}

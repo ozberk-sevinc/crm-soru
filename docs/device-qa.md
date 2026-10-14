@@ -16,3 +16,5 @@ Automated Go tests, TypeScript checks and JS bundle exports do not replace these
 10. Set the production HTTPS API URL, confirm package/bundle IDs, configure real app-store accounts, review privacy disclosures and store assets, then test signed preview builds before submitting production builds.
 
 At five seconds, students should recognise **Today’s next question**, **the reason and concept behind a mistake**, or **their exam-scoped progress**. Native reminders and actual signed binaries require real-device/build-account verification.
+
+11. Complete the Google identity/admin and ZIP/folder upload checks in `docs/google-and-imports.md`, including linking existing history, denial of student approval, package previews, rejection reasons, conflicting approval, timeout recovery and published content after restart.

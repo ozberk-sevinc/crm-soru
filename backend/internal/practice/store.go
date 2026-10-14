@@ -13,10 +13,12 @@ import (
 )
 
 type State struct {
-	Students    map[string]Student  `json:"students"`
-	Sessions    map[string]Session  `json:"sessions"`
-	Attempts    []Attempt           `json:"attempts"`
-	Assignments map[string][]string `json:"assignments"`
+	Students    map[string]Student        `json:"students"`
+	Sessions    map[string]Session        `json:"sessions"`
+	Attempts    []Attempt                 `json:"attempts"`
+	Assignments map[string][]string       `json:"assignments"`
+	Imports     map[string]QuestionImport `json:"imports"`
+	Published   Bank                      `json:"published"`
 }
 type Store struct {
 	mu    sync.Mutex
@@ -25,7 +27,7 @@ type Store struct {
 }
 
 func OpenStore(path string) (*Store, error) {
-	s := &Store{path: path, state: State{Students: map[string]Student{}, Sessions: map[string]Session{}, Attempts: []Attempt{}, Assignments: map[string][]string{}}}
+	s := &Store{path: path, state: State{Students: map[string]Student{}, Sessions: map[string]Session{}, Attempts: []Attempt{}, Assignments: map[string][]string{}, Imports: map[string]QuestionImport{}, Published: Bank{Version: 1, Outcomes: []Outcome{}, Questions: []Question{}}}}
 	b, err := os.ReadFile(path)
 	if errors.Is(err, os.ErrNotExist) {
 		return s, nil
@@ -38,6 +40,13 @@ func OpenStore(path string) (*Store, error) {
 	}
 	if s.state.Students == nil || s.state.Sessions == nil || s.state.Assignments == nil || s.state.Attempts == nil {
 		return nil, fmt.Errorf("incomplete state file")
+	}
+	// Migrate progress files created before uploads/Google login were introduced.
+	if s.state.Imports == nil {
+		s.state.Imports = map[string]QuestionImport{}
+	}
+	if s.state.Published.Version == 0 {
+		s.state.Published = Bank{Version: 1, Outcomes: []Outcome{}, Questions: []Question{}}
 	}
 	return s, nil
 }

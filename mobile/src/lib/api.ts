@@ -1,4 +1,6 @@
 import type {
+  ImportSummary,
+  ImportDetail,
   Attempt,
   Daily,
   Exam,
@@ -64,6 +66,29 @@ async function request<T>(
   }
 }
 export const api = {
+  google: (id_token: string, invite_code: string, timezone: string) =>
+    request<{ token: string; student: Student }>(
+      "/auth/google",
+      undefined,
+      "POST",
+      { id_token, invite_code, timezone },
+    ),
+  imports: (token: string, admin = false) =>
+    request<ImportSummary[]>(admin ? "/admin/imports" : "/imports", token),
+  importDetail: (token: string, id: string) =>
+    request<ImportDetail>(`/admin/imports/${encodeURIComponent(id)}`, token),
+  reviewImport: (
+    token: string,
+    id: string,
+    decision: "approved" | "rejected",
+    note: string,
+  ) =>
+    request<ImportSummary>(
+      `/admin/imports/${encodeURIComponent(id)}/decision`,
+      token,
+      "POST",
+      { decision, note },
+    ),
   enroll: (code: string) =>
     request<{ token: string; student: Student }>("/enroll", undefined, "POST", {
       code,

@@ -13,13 +13,16 @@ import (
 )
 
 type API struct {
-	Bank       Bank
-	Store      *Store
-	AdminToken string
-	Demo       bool
-	Now        func() time.Time
-	limitsMu   sync.Mutex
-	limits     map[string]limit
+	Bank                Bank
+	Store               *Store
+	AdminToken          string
+	Demo                bool
+	Now                 func() time.Time
+	VerifyGoogle        GoogleVerifier
+	GoogleAdminEmails   map[string]bool
+	GoogleAdminSubjects map[string]bool
+	limitsMu            sync.Mutex
+	limits              map[string]limit
 }
 type limit struct {
 	Count int
@@ -70,13 +73,12 @@ func (a *API) authenticated(r *http.Request) (Student, bool) {
 			student, ok = s.Students[session.StudentID]
 		}
 	})
-	student.InviteHash = ""
-	return student, ok
+	return a.publicStudent(student), ok
 }
 func (a *API) allowed(r *http.Request) bool {
 	host, _, _ := net.SplitHostPort(r.RemoteAddr)
 	key := host
-	if r.Header.Get("Authorization") != "" {
+	if r.Header.Get("Authorization") != "" && r.URL.Path != "/v1/auth/google" && r.URL.Path != "/v1/enroll" {
 		key = hash(r.Header.Get("Authorization"))
 	}
 	a.limitsMu.Lock()
@@ -105,10 +107,11 @@ func (a *API) Handler() http.Handler {
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) { respond(w, 200, map[string]string{"status": "ok"}) })
 	mux.HandleFunc("POST /v1/admin/students", a.invite)
 	mux.HandleFunc("POST /v1/enroll", a.enroll)
+	mux.HandleFunc("POST /v1/auth/google", a.googleLogin)
 	mux.HandleFunc("/v1/", func(w http.ResponseWriter, r *http.Request) {
 		student, ok := a.authenticated(r)
 		if !ok {
-			fail(w, 401, "Your session expired. Ask your consultancy for a new invite code.")
+			fail(w, 401, "Your session expired. Sign in again or use a new invite code.")
 			return
 		}
 		exam := r.URL.Query().Get("exam")
@@ -117,11 +120,25 @@ func (a *API) Handler() http.Handler {
 			return
 		}
 		switch {
+		case strings.HasPrefix(r.URL.Path, "/v1/admin/imports"):
+			if student.Role != "admin" {
+				fail(w, 403, "Admin approval access is required")
+				return
+			}
+			if r.Method == "GET" && r.URL.Path == "/v1/admin/imports" {
+				a.listImports(w, r, student, true)
+			} else {
+				a.adminImport(w, r, student)
+			}
+		case r.Method == "POST" && r.URL.Path == "/v1/imports":
+			a.uploadQuestions(w, r, student)
+		case r.Method == "GET" && r.URL.Path == "/v1/imports":
+			a.listImports(w, r, student, false)
 		case r.Method == "GET" && r.URL.Path == "/v1/me":
 			respond(w, 200, student)
 		case r.Method == "GET" && r.URL.Path == "/v1/daily":
 			var result Daily
-			err := a.Store.Transaction(func(s *State) error { result = a.Bank.daily(s, student, exam, a.now()); return nil })
+			err := a.Store.Transaction(func(s *State) error { result = a.activeBank(*s).daily(s, student, exam, a.now()); return nil })
 			if err != nil {
 				fail(w, 500, "Could not save today's plan. Retry.")
 				return
@@ -129,7 +146,7 @@ func (a *API) Handler() http.Handler {
 			respond(w, 200, result)
 		case r.Method == "GET" && r.URL.Path == "/v1/performance":
 			var result Performance
-			a.Store.Read(func(s State) { result = a.Bank.performance(s, student, exam, a.now()) })
+			a.Store.Read(func(s State) { result = a.activeBank(s).performance(s, student, exam, a.now()) })
 			respond(w, 200, result)
 		case r.Method == "GET" && r.URL.Path == "/v1/mistakes":
 			var result []Mistake
@@ -166,7 +183,9 @@ func (a *API) Handler() http.Handler {
 }
 func (a *API) invite(w http.ResponseWriter, r *http.Request) {
 	provided := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
-	if len(a.AdminToken) < 32 || subtle.ConstantTimeCompare([]byte(provided), []byte(a.AdminToken)) != 1 {
+	master := len(a.AdminToken) >= 32 && subtle.ConstantTimeCompare([]byte(provided), []byte(a.AdminToken)) == 1
+	admin, signedIn := a.authenticated(r)
+	if !master && (!signedIn || admin.Role != "admin") {
 		fail(w, 401, "Admin authentication required")
 		return
 	}
@@ -189,7 +208,11 @@ func (a *API) invite(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err = a.Store.Transaction(func(s *State) error {
-		student := Student{ID: in.StudentID, Name: strings.TrimSpace(in.Name), Timezone: in.Timezone, InviteHash: hash(code)}
+		student := s.Students[in.StudentID]
+		student.ID = in.StudentID
+		student.Name = strings.TrimSpace(in.Name)
+		student.Timezone = in.Timezone
+		student.InviteHash = hash(code)
 		s.Students[in.StudentID] = student
 		// Reissuing an invitation revokes the old device sessions for account recovery.
 		for token, session := range s.Sessions {
@@ -259,7 +282,7 @@ func (a *API) enroll(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	respond(w, 200, map[string]any{"token": token, "student": student})
+	respond(w, 200, map[string]any{"token": token, "student": a.publicStudent(student)})
 }
 func (a *API) attempt(w http.ResponseWriter, r *http.Request, student Student) {
 	var in Submission
@@ -270,7 +293,7 @@ func (a *API) attempt(w http.ResponseWriter, r *http.Request, student Student) {
 	var result Attempt
 	err := a.Store.Transaction(func(s *State) error {
 		var err error
-		result, err = a.Bank.submit(s, student, in, a.now())
+		result, err = a.activeBank(*s).submit(s, student, in, a.now())
 		if err != nil {
 			return apiError{400, err.Error()}
 		}

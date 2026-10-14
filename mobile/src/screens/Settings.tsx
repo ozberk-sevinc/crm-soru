@@ -17,9 +17,13 @@ import type { Student } from "../lib/types";
 export function Settings({
   student,
   onLogout,
+  onUploads,
+  onReview,
 }: {
   student: Student;
   onLogout: () => void;
+  onUploads: () => void;
+  onReview: () => void;
 }) {
   const [reminder, setReminder] = useState<Reminder>({
     enabled: false,
@@ -60,6 +64,23 @@ export function Settings({
   }
   return (
     <Screen>
+      <Card>
+        <Label strong size={22}>
+          Questions & contributions
+        </Label>
+        <Button title="Upload a question package" onPress={onUploads} />
+        {student.role === "admin" && (
+          <Button
+            title="Review pending question packages"
+            quiet
+            onPress={onReview}
+          />
+        )}
+        <Label muted size={13}>
+          {student.email ? `Signed in as ${student.email}` : student.name} ·{" "}
+          {student.role}
+        </Label>
+      </Card>
       <Section eyebrow={student.name} title="Your daily rhythm">
         <Label muted>Account timezone: {student.timezone}</Label>
       </Section>

@@ -43,9 +43,12 @@ import { Practice, Feedback } from "./src/screens/Practice";
 import { Today } from "./src/screens/Today";
 import { Mistakes } from "./src/screens/Mistakes";
 import { Performance } from "./src/screens/Performance";
+import { Uploads, ReviewQueue } from "./src/screens/Uploads";
+import { signOutGoogle } from "./src/lib/google";
 import { Settings } from "./src/screens/Settings";
 
-type Tab = "today" | "mistakes" | "progress" | "settings";
+type Tab =
+  "today" | "mistakes" | "progress" | "settings" | "uploads" | "reviews";
 function Application() {
   const t = useTheme();
   const [token, setToken] = useState<string | null>(null);
@@ -169,6 +172,8 @@ function Application() {
     try {
       await disableReminder();
       await deleteToken();
+      await signOutGoogle().catch(() => {});
+      setTab("today");
       setToken(null);
       setStudent(null);
       setData(null);
@@ -185,7 +190,7 @@ function Application() {
     if (!token) return;
     Alert.alert(
       "Sign out?",
-      "You will need a new invite code to sign in again. Your saved history stays with your account.",
+      "You can sign in with Google again. Invite-only accounts need a new invite code. Your saved history stays with your account.",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -238,13 +243,10 @@ function Application() {
       <Screen>
         <ErrorNotice message={error || "Your session expired."} />
         <Label>
-          Ask your consultancy for a new invite code. Your saved history is
-          retained.
+          Sign in with Google again, or ask your consultancy for a new invite
+          code. Your saved history is retained.
         </Label>
-        <Button
-          title="Use a new invite code"
-          onPress={() => void resetSession()}
-        />
+        <Button title="Return to sign-in" onPress={() => void resetSession()} />
       </Screen>
     );
   else if (token && !student)
@@ -352,8 +354,17 @@ function Application() {
         )}
         {busy && <ActivityIndicator color={t.accent} />}
         <View style={{ flex: 1 }}>
-          {tab === "settings" ? (
-            <Settings student={student} onLogout={() => void logout()} />
+          {tab === "uploads" ? (
+            <Uploads token={token} onBack={() => setTab("settings")} />
+          ) : tab === "reviews" && student.role === "admin" ? (
+            <ReviewQueue token={token} onBack={() => setTab("settings")} />
+          ) : tab === "settings" ? (
+            <Settings
+              student={student}
+              onLogout={() => void logout()}
+              onUploads={() => setTab("uploads")}
+              onReview={() => setTab("reviews")}
+            />
           ) : data?.daily.exam === exam && data.studentId === student.id ? (
             tab === "today" ? (
               <Today
@@ -400,7 +411,7 @@ function Application() {
               ["today", "Today"],
               ["mistakes", "Mistakes"],
               ["progress", "Progress"],
-              ["settings", "Reminders"],
+              ["settings", "Account"],
             ] as const
           ).map(([id, title]) => (
             <Pressable
