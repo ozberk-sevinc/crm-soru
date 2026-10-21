@@ -2,7 +2,7 @@ module github.com/ozberk-sevinc/crm-soru/backend
 
 go 1.26.0
 
-require google.golang.org/api v0.303.0
+require google.golang.org/api v0.304.0
 
 require (
 	cloud.google.com/go/auth v0.24.1-0.20261001053825-dbc26066f70a // indirect
