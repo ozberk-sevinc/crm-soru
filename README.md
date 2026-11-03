@@ -15,7 +15,7 @@ A focused iOS/Android exam-practice app built with **React Native / Expo + TypeS
 - Verified **Google sign-in**, optional invite linking to preserve existing student history, server-controlled admin roles, securely stored device sessions and invite fallback.
 - **ZIP / folder / multiple JSON uploads**, a pending approval queue, admin previews with answer keys, approve/reject decisions and uploader-visible status/reasons. Approved packages are published atomically and survive restarts.
 - Student-scoped progress and idempotent answer submission with interrupted-answer recovery.
-- Light/dark themes, safe-area handling, scalable system text, large touch targets, accessible controls, keyboard-aware forms, phone/tablet width limits, loading/empty/error/disabled states. Motion is limited to press feedback and native interactions.
+- Light/dark themes, safe-area handling, scalable system text, large touch targets, accessible controls, keyboard-aware forms, phone/tablet width limits, loading/empty/error/disabled states. Motion uses brief native-driver entrance transitions and press feedback, with Reduce Motion support.
 
 ## Start locally
 

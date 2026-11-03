@@ -31,3 +31,5 @@ No native device or simulator screenshots, VoiceOver/TalkBack run, actual daily 
 - Browser checks rendered all 12 preview views at 736px and 320px, exercised light/dark and reduced motion, and verified answer grading, reflection save, upload status, rejection-reason validation, admin approval, and simulated Google entry with no runtime errors.
 - Backend code was unchanged. The Go toolchain was unavailable in this local session; backend verification runs in GitHub Actions.
 - Native devices/signing and production OAuth credentials are still required for release QA; the browser preview uses demo adapters.
+
+GitHub’s online Expo compatibility check identified newer required patches after the offline check. Expo and expo-notifications were updated to the SDK-recommended patch ranges; no CI gate was disabled.
