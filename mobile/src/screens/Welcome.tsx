@@ -1,14 +1,10 @@
 import React, { useState } from "react";
+import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react-native";
+import { Brand } from "../components/chrome";
+import { Orbit } from "../components/study";
+import { Display, Eyebrow, useTheme, styles } from "../components/ui";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
-import {
-  Button,
-  Card,
-  ErrorNotice,
-  Field,
-  Label,
-  Screen,
-  Section,
-} from "../components/ui";
+import { Button, ErrorNotice, Field, Label, Screen } from "../components/ui";
 import { api, configurationError } from "../lib/api";
 import { googleConfigured, googleIDToken } from "../lib/google";
 import { saveToken } from "../lib/storage";
@@ -19,6 +15,7 @@ export function Welcome({
 }: {
   onEnroll: (token: string, student: Student) => void;
 }) {
+  const t = useTheme();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -60,69 +57,98 @@ export function Welcome({
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
-        <View style={{ paddingTop: 36 }}>
-          <Section
-            eyebrow="Otranto Soru"
-            title="Small sessions. Stronger understanding."
-          >
-            <Label muted>
-              Daily IMAT & TOLC practice, built around what you need to learn
-              next.
-            </Label>
-          </Section>
+        <View style={{ paddingTop: 16, paddingBottom: 12 }}>
+          <Brand />
         </View>
-        <Card tint>
-          <Label size={22} strong>
-            Five questions. One clear next step.
+        <View
+          style={{
+            padding: 26,
+            backgroundColor: t.hero,
+            borderRadius: 28,
+            gap: 25,
+          }}
+        >
+          <View style={styles.between}>
+            <Eyebrow color={t.heroMuted}>A LITTLE EVERY DAY</Eyebrow>
+            <Orbit size={86} />
+          </View>
+          <Display size={43} color={t.heroInk}>
+            {"Big dreams.\nSmall daily\nsteps."}
+          </Display>
+          <Label color={t.heroMuted} size={15}>
+            Your IMAT & TOLC journey, one well-understood question at a time.
           </Label>
-          <Label>
-            Answer, understand your mistakes, and see your progress by kazanım.
+          <View style={{ flexDirection: "row", gap: 18, paddingTop: 8 }}>
+            {["01 / Practise", "02 / Reflect", "03 / Grow"].map((step) => (
+              <Label key={step} size={11} color={t.lime}>
+                {step}
+              </Label>
+            ))}
+          </View>
+        </View>
+        <View style={{ gap: 8 }}>
+          <Display size={28}>Your next chapter starts here.</Display>
+          <Label muted size={14}>
+            Sign in to your personal study space.
           </Label>
-        </Card>
-        <Section title="Join your study space">
-          <Label muted>
-            Use Google to sign in. If you already have a consultancy account,
-            enter its invite code below before your first Google sign-in to keep
-            your history.
-          </Label>
-        </Section>
+        </View>
         <Button
           title="Continue with Google"
           loading={busy}
           disabled={!googleConfigured() || !!configurationError()}
           onPress={() => void google()}
+          icon={ArrowRight}
         />
         {!googleConfigured() && (
           <Label muted size={13}>
-            Google sign-in needs the consultancy’s OAuth configuration. Invite
-            sign-in is available below.
+            Google sign-in needs the consultancy’s OAuth configuration. You can
+            use your invite below.
           </Label>
         )}
-        <Field
-          accessibilityLabel="Invite code"
-          placeholder="Invite code (optional for Google)"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={code}
-          onChangeText={setCode}
-          returnKeyType="go"
-          onSubmitEditing={() => {
-            if (code && !busy) void enroll();
-          }}
-        />
-        {(error || configurationError()) && (
-          <ErrorNotice message={error || configurationError()!} />
-        )}
-        <Button
-          title="Continue with invite code"
-          loading={busy}
-          disabled={!code.trim() || !!configurationError()}
-          onPress={() => void enroll()}
-        />
-        <Label size={13} muted>
-          Includes original sample practice questions. These are not official
-          exam papers or an exam score prediction.
-        </Label>
+        <View style={{ flexDirection: "row", gap: 14, alignItems: "center" }}>
+          <View style={{ height: 1, backgroundColor: t.border, flex: 1 }} />
+          <Eyebrow>HAVE AN INVITE?</Eyebrow>
+          <View style={{ height: 1, backgroundColor: t.border, flex: 1 }} />
+        </View>
+        <View style={{ gap: 12 }}>
+          <Label size={13} strong>
+            Consultancy invite code
+          </Label>
+          <Field
+            accessibilityLabel="Invite code"
+            placeholder="Enter your invite code"
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={code}
+            onChangeText={setCode}
+            returnKeyType="go"
+            onSubmitEditing={() => {
+              if (code && !busy) void enroll();
+            }}
+          />
+          <Label size={12} muted>
+            Already a student? Add your invite before your first Google sign-in
+            to keep your existing history.
+          </Label>
+          {(error || configurationError()) && (
+            <ErrorNotice message={error || configurationError()!} />
+          )}
+          <Button
+            quiet
+            icon={KeyRound}
+            title="Continue with invite code"
+            loading={busy}
+            disabled={!code.trim() || !!configurationError()}
+            onPress={() => void enroll()}
+          />
+        </View>
+        <View style={styles.inline}>
+          <ShieldCheck size={18} color={t.muted} />
+          <Label size={11} muted>
+            Your progress belongs to your account. Original sample questions;
+            not official exam papers.
+          </Label>
+        </View>
       </Screen>
     </KeyboardAvoidingView>
   );

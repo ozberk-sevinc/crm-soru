@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@sparticuz/chromium": "^153.0.0",
+    "esbuild": "^0.28.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native-web": "^0.21.2"
+  },
+  "name": "crm-soru-screen-preview",
+  "private": true,
+  "scripts": {
+    "build": "node build.cjs",
+    "test": "node check.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

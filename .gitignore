@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 mobile/.expo/
 mobile/dist/
 mobile/android/
@@ -12,3 +12,5 @@ backend/server
 *.aab
 *.ipa
 *.log
+
+tools/preview/artifacts/

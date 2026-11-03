@@ -135,3 +135,7 @@ npm run export:ios
 ```
 
 GitHub Actions runs these on PRs and main. Bundle exports verify JavaScript/platform module resolution; **they do not produce signed binaries or verify native runtime/notification behaviour**. Before distribution complete [`docs/device-qa.md`](docs/device-qa.md) on both platforms, including screen readers, large text, offline submission recovery and notification delivery.
+
+## App screen preview
+
+The redesigned app has a local [interactive preview](docs/design-preview.html) covering all student and admin screens with demo data. It reuses the React Native screen components; see [preview setup](tools/preview/README.md) to rebuild or run browser checks.

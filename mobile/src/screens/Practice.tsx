@@ -1,5 +1,14 @@
 import React, { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+  ArrowLeft,
+  BookOpen,
+  Check,
+  Lightbulb,
+  PencilLine,
+  RotateCcw,
+} from "lucide-react-native";
+import { Badge, Display, Eyebrow, IconTile } from "../components/ui";
 import * as Crypto from "expo-crypto";
 import {
   Button,
@@ -9,7 +18,6 @@ import {
   Field,
   Label,
   Screen,
-  Section,
   styles,
   useTheme,
 } from "../components/ui";
@@ -73,66 +81,111 @@ export function Feedback({
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
-        <Section
-          eyebrow={attempt.question.exam}
-          title={
-            attempt.correct
-              ? "Correct. Keep building."
-              : "Let’s understand this one."
-          }
-        >
-          <Label muted>{attempt.question.subject} · Answer recorded</Label>
-        </Section>
+        <View style={{ paddingTop: 14, gap: 16 }}>
+          <View style={styles.between}>
+            <Badge tone={attempt.correct ? "success" : "warning"}>
+              {attempt.correct
+                ? "Answer recorded · correct"
+                : "Answer recorded · revisit"}
+            </Badge>
+            <Label size={12} muted>
+              {attempt.question.exam}
+            </Label>
+          </View>
+          <IconTile
+            icon={attempt.correct ? Check : Lightbulb}
+            tone={attempt.correct ? "neutral" : "warning"}
+          />
+          <Display size={35}>
+            {attempt.correct
+              ? "That’s one more\nconcept connected."
+              : "Every mistake\nhas something to teach."}
+          </Display>
+          <Label muted size={14}>
+            {attempt.question.subject} · {attempt.duration_seconds}s spent
+          </Label>
+        </View>
         <Card tint>
-          <Label size={20} strong>
+          <Eyebrow>THE QUESTION</Eyebrow>
+          <Label strong size={19}>
             {attempt.question.prompt}
           </Label>
-          <Label>Your answer: {studentAnswer(attempt)}</Label>
-          <Label strong color={attempt.correct ? t.accent : t.danger}>
-            {attempt.correct ? "Correct answer" : "Answer to remember"}:{" "}
-            {answerLabel(attempt)}
-          </Label>
-          <Label>{attempt.explanation}</Label>
+          <View style={{ gap: 8 }}>
+            <Label size={13} color={attempt.correct ? t.accent : t.danger}>
+              Your answer · {studentAnswer(attempt)}
+            </Label>
+            <Label strong size={15} color={t.accent}>
+              Correct answer · {answerLabel(attempt)}
+            </Label>
+          </View>
         </Card>
+        <View style={{ gap: 12 }}>
+          <View style={styles.inline}>
+            <Lightbulb size={22} color={t.accent} />
+            <Label strong size={21}>
+              The reasoning
+            </Label>
+          </View>
+          <Label size={16}>{attempt.explanation}</Label>
+        </View>
         {!attempt.correct && (
           <>
-            <Section title="What might have gone wrong?">
-              <Label>{attempt.misconception}</Label>
-              <Label size={13} muted>
-                This is a clue based on your answer, not a certainty about your
-                reasoning.
+            {!!attempt.misconception && (
+              <View
+                style={{
+                  borderLeftWidth: 3,
+                  borderColor: t.gold,
+                  paddingLeft: 15,
+                  gap: 7,
+                }}
+              >
+                <Eyebrow>AN ANSWER CLUE</Eyebrow>
+                <Label size={14}>{attempt.misconception}</Label>
+                <Label size={11} muted>
+                  This is a clue from your answer, rather than a diagnosis of
+                  your reasoning.
+                </Label>
+              </View>
+            )}
+            <View style={{ gap: 8 }}>
+              <Display size={27}>What happened for you?</Display>
+              <Label muted size={14}>
+                Notice the pattern. Make the next attempt count.
               </Label>
-            </Section>
-            <Section title="What happened for you?">
-              <Label muted>
-                Record the reason so your mistake notebook stays useful.
+            </View>
+            <View style={{ gap: 9 }}>
+              {reasons.map((r) => (
+                <Choice
+                  key={r.id}
+                  title={r.title}
+                  selected={reason === r.id}
+                  onPress={() => {
+                    setReason(r.id);
+                    setSaved(false);
+                  }}
+                />
+              ))}
+            </View>
+            <View style={{ gap: 9 }}>
+              <Label strong size={13}>
+                A note to your future self
               </Label>
-            </Section>
-            {reasons.map((r) => (
-              <Choice
-                key={r.id}
-                title={r.title}
-                selected={reason === r.id}
-                onPress={() => {
-                  setReason(r.id);
+              <Field
+                accessibilityLabel="Mistake reflection note"
+                placeholder="Next time, I’ll… (optional)"
+                multiline
+                maxLength={1000}
+                value={note}
+                onChangeText={(value) => {
+                  setNote(value);
                   setSaved(false);
                 }}
               />
-            ))}
-            <Field
-              accessibilityLabel="Mistake reflection note"
-              placeholder="What will you do differently next time? (optional)"
-              multiline
-              maxLength={1000}
-              value={note}
-              onChangeText={(value) => {
-                setNote(value);
-                setSaved(false);
-              }}
-            />
+            </View>
             {error && <ErrorNotice message={error} />}
             <Button
               title={saved ? "Reflection saved" : "Save reflection"}
+              icon={saved ? Check : PencilLine}
               disabled={!reason || saved}
               loading={busy}
               quiet
@@ -140,20 +193,31 @@ export function Feedback({
             />
           </>
         )}
-        <Section title="Kazanım · remember this" />
+        <View style={{ gap: 12 }}>
+          <View style={styles.inline}>
+            <BookOpen size={20} color={t.accent} />
+            <Label strong size={20}>
+              Take this with you.
+            </Label>
+          </View>
+          <Eyebrow>KAZANIM · YOUR KNOWLEDGE LINK</Eyebrow>
+        </View>
         {attempt.affected_outcomes.map((o) => (
           <Card key={o.id}>
-            <Label size={13} muted>
-              {o.subject}
+            <Badge>{o.subject}</Badge>
+            <Label strong size={18}>
+              {o.title}
             </Label>
-            <Label strong>{o.title}</Label>
-            <Label>{o.remember}</Label>
+            <Label size={14}>{o.remember}</Label>
           </Card>
         ))}
-        <Label muted size={13}>
-          Scheduled for review from{" "}
-          {new Date(attempt.review_at).toLocaleDateString()}.
-        </Label>
+        <View style={styles.inline}>
+          <RotateCcw size={15} color={t.muted} />
+          <Label muted size={12}>
+            Scheduled for review from{" "}
+            {new Date(attempt.review_at).toLocaleDateString()}.
+          </Label>
+        </View>
         <Button
           title="Continue"
           disabled={busy}
@@ -163,6 +227,7 @@ export function Feedback({
     </KeyboardAvoidingView>
   );
 }
+
 export function Practice({
   question,
   token,
@@ -178,6 +243,7 @@ export function Practice({
   onExit: () => void;
   onProtect: (protectedAnswer: boolean) => void;
 }) {
+  const t = useTheme();
   const [option, setOption] = useState("");
   const [number, setNumber] = useState("");
   const [confidence, setConfidence] = useState(2);
@@ -229,28 +295,34 @@ export function Practice({
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <Screen>
-        <Button
-          quiet
-          title="Back to today"
-          disabled={busy || locked}
-          onPress={onExit}
-        />
-        <Section
-          eyebrow={`${question.exam} · ${question.subject}`}
-          title="One question at a time"
-        >
-          <Label muted>
-            {question.difficulty} ·{" "}
+        <View style={{ paddingTop: 12, gap: 22 }}>
+          <View style={styles.between}>
+            <Button
+              quiet
+              icon={ArrowLeft}
+              title="Back to today"
+              disabled={busy || locked}
+              onPress={onExit}
+            />
+            <Eyebrow>{question.exam}</Eyebrow>
+          </View>
+          <View style={styles.between}>
+            <Badge>{question.subject}</Badge>
+            <Label muted size={12}>
+              {question.difficulty} ·{" "}
+              {question.type === "numeric" ? "Numeric answer" : "Single choice"}
+            </Label>
+          </View>
+        </View>
+        <View style={{ gap: 15, paddingVertical: 8 }}>
+          <Eyebrow>TAKE YOUR TIME. THINK IT THROUGH.</Eyebrow>
+          <Display size={28}>{question.prompt}</Display>
+          <Label muted size={13}>
             {question.type === "numeric"
-              ? "Enter a number"
-              : "Choose one answer"}
+              ? "Enter your answer below."
+              : "Choose the one answer that fits best."}
           </Label>
-        </Section>
-        <Card>
-          <Label size={22} strong>
-            {question.prompt}
-          </Label>
-        </Card>
+        </View>
         <View
           style={{ gap: 12, opacity: locked ? 0.7 : 1 }}
           pointerEvents={locked ? "none" : "auto"}
@@ -259,7 +331,8 @@ export function Practice({
             question.options.map((o) => (
               <Choice
                 key={o.id}
-                title={`${o.id}. ${o.text}`}
+                letter={o.id}
+                title={o.text}
                 selected={option === o.id}
                 onPress={() => setOption(o.id)}
               />
@@ -274,23 +347,38 @@ export function Practice({
               editable={!locked}
             />
           )}
-          <Label strong>How confident are you?</Label>
-          <View style={styles.row}>
-            {["Guessing", "Unsure", "Confident"].map((title, i) => (
-              <View key={title} style={{ flexGrow: 1 }}>
-                <Choice
-                  title={title}
-                  selected={confidence === i + 1}
-                  onPress={() => setConfidence(i + 1)}
-                />
-              </View>
-            ))}
+          <View
+            style={{
+              gap: 10,
+              marginTop: 15,
+              paddingTop: 20,
+              borderTopWidth: 1,
+              borderColor: t.border,
+            }}
+          >
+            <Label strong size={15}>
+              How sure do you feel?
+            </Label>
+            <Label muted size={12}>
+              There’s no wrong answer here. This helps you reflect.
+            </Label>
+            <View style={styles.row}>
+              {["Guessing", "Unsure", "Confident"].map((title, i) => (
+                <View key={title} style={{ flexGrow: 1, minWidth: 85 }}>
+                  <Choice
+                    title={title}
+                    selected={confidence === i + 1}
+                    onPress={() => setConfidence(i + 1)}
+                  />
+                </View>
+              ))}
+            </View>
           </View>
         </View>
         {error && <ErrorNotice message={error} />}
         {locked && (
           <Label muted size={13}>
-            Your answer is held safely on this device. Retry to confirm it was
+            Your answer is saved on this device. Retry to confirm it was
             recorded; it will count once.
           </Label>
         )}
@@ -300,9 +388,12 @@ export function Practice({
           disabled={!hasAnswer(question, option, number)}
           onPress={() => void submit()}
         />
-        <Label size={13} muted>
-          Kazanımlar: {question.outcomes.map((o) => o.title).join(" · ")}
-        </Label>
+        <View style={{ gap: 5 }}>
+          <Eyebrow>CONNECTED KAZANIMLAR</Eyebrow>
+          <Label size={12} muted>
+            {question.outcomes.map((o) => o.title).join(" · ")}
+          </Label>
+        </View>
       </Screen>
     </KeyboardAvoidingView>
   );

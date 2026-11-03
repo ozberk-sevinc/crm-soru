@@ -1,16 +1,28 @@
 import React from "react";
+import { Pressable, View } from "react-native";
 import {
+  ArrowUpRight,
+  Bell,
+  BookOpen,
+  ChevronRight,
+  Flame,
+  RotateCcw,
+} from "lucide-react-native";
+import {
+  Badge,
   Button,
   Card,
+  Display,
+  Eyebrow,
+  IconTile,
   Label,
   Progress,
   Screen,
-  Section,
   styles,
+  useTheme,
 } from "../components/ui";
-import { View } from "react-native";
+import { Orbit } from "../components/study";
 import type { Daily, Performance, Question, Student } from "../lib/types";
-
 export function Today({
   student,
   daily,
@@ -24,91 +36,217 @@ export function Today({
   onPractice: (q: Question) => void;
   onReminders: () => void;
 }) {
+  const t = useTheme();
   const next = daily.questions[0];
-  const weak = performance.outcomes.find(
-    (o) => o.attempts > 0 && o.accuracy < 70,
-  );
+  const weak = [...performance.outcomes]
+    .filter((o) => o.attempts > 0 && o.accuracy < 70)
+    .sort((a, b) => a.accuracy - b.accuracy)[0];
+  const complete = daily.goal > 0 && daily.completed >= daily.goal;
+  const day = new Date(`${daily.day}T12:00:00Z`).toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
   return (
     <Screen>
-      <Section
-        eyebrow={`Daily practice · ${daily.exam}`}
-        title={`Your next step, ${student.name}.`}
+      <View style={{ gap: 7 }}>
+        <Eyebrow>{day.toUpperCase()}</Eyebrow>
+        <Display>
+          Make room to grow,{"\n"}
+          {student.name.split(" ")[0]}.
+        </Display>
+        <Label muted size={14}>
+          A little focus. A clearer understanding.
+        </Label>
+      </View>
+      <View
+        style={{
+          padding: 24,
+          borderRadius: 26,
+          backgroundColor: t.hero,
+          gap: 21,
+          overflow: "hidden",
+        }}
       >
-        <Label muted>
-          {daily.day} · {student.timezone}
-        </Label>
-      </Section>
-      <Card tint>
-        <Label size={14} strong>
-          TODAY’S SESSION
-        </Label>
-        <Label size={38} strong>
-          {daily.completed} / {daily.goal}
-        </Label>
-        <Label>
-          {daily.goal === 0
-            ? "No questions in this exam yet."
-            : daily.completed === daily.goal
-              ? "Daily session complete. A little consistency goes a long way."
-              : "Five focused questions. Understand each answer before moving on."}
-        </Label>
-        <Progress
-          value={daily.goal ? (daily.completed / daily.goal) * 100 : 0}
-          label="Daily session progress"
-        />
+        <View style={styles.between}>
+          <View style={{ flex: 1, gap: 10 }}>
+            <Eyebrow color={t.heroMuted}>YOUR DAILY SESSION</Eyebrow>
+            <Display size={32} color={t.heroInk}>
+              {complete ? "Today,\nwell spent." : "Small steps.\nBig futures."}
+            </Display>
+          </View>
+          <Orbit size={90} />
+        </View>
+        <View style={{ gap: 12 }}>
+          <View style={styles.between}>
+            <Label strong size={14} color={t.heroInk}>
+              {daily.completed} of {daily.goal} complete
+            </Label>
+            <Label size={12} color={t.heroMuted}>
+              {daily.exam}
+            </Label>
+          </View>
+          <Progress
+            hero
+            value={daily.goal ? (daily.completed / daily.goal) * 100 : 0}
+            label="Daily session progress"
+          />
+        </View>
         {next ? (
           <Button
-            title="Answer the next question"
+            tone="hero"
+            title={daily.completed ? "Continue my session" : "Start my session"}
             onPress={() => onPractice(next)}
           />
         ) : (
-          <Label strong>Come back tomorrow for your next set.</Label>
+          <Label color={t.heroInk} strong>
+            {daily.goal === 0
+              ? "Questions are on their way."
+              : "You’re all set. See you tomorrow."}
+          </Label>
         )}
-      </Card>
-      <View style={styles.row}>
-        <View style={{ flex: 1, minWidth: 130 }}>
-          <Card>
-            <Label size={30} strong>
-              {performance.streak}
-            </Label>
-            <Label muted>day practice streak</Label>
-          </Card>
-        </View>
-        <View style={{ flex: 1, minWidth: 130 }}>
-          <Card>
-            <Label size={30} strong>
-              {performance.unresolved}
-            </Label>
-            <Label muted>questions to revisit</Label>
-          </Card>
-        </View>
+      </View>
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        {[
+          {
+            icon: Flame,
+            value: performance.streak,
+            title: "day streak",
+            tone: "warning" as const,
+          },
+          {
+            icon: RotateCcw,
+            value: performance.unresolved,
+            title: "to revisit",
+            tone: "neutral" as const,
+          },
+        ].map(({ icon: Icon, value, title, tone }) => (
+          <View key={title} style={{ flex: 1 }}>
+            <Card>
+              <IconTile icon={Icon} tone={tone} />
+              <View>
+                <Display size={29}>{value}</Display>
+                <Label muted size={12}>
+                  {title}
+                </Label>
+              </View>
+            </Card>
+          </View>
+        ))}
       </View>
       {weak && (
-        <Section eyebrow="A useful focus" title={weak.title}>
-          <Label>{weak.remember}</Label>
-          <Label muted size={13}>
-            {weak.accuracy}% across the latest answers to {weak.attempts}{" "}
-            distinct questions. A learning signal, not a mastery guarantee.
-          </Label>
-        </Section>
+        <View style={{ gap: 12 }}>
+          <View style={styles.between}>
+            <Label strong size={19}>
+              A little extra attention
+            </Label>
+            <ArrowUpRight size={20} color={t.muted} />
+          </View>
+          <Card>
+            <View style={styles.between}>
+              <Badge tone="warning">{weak.subject}</Badge>
+              <Label strong size={13} color={t.gold}>
+                {weak.accuracy}% accuracy
+              </Label>
+            </View>
+            <Label strong size={19}>
+              {weak.title}
+            </Label>
+            <Label muted size={14}>
+              {weak.remember}
+            </Label>
+            <Progress value={weak.accuracy} label={`${weak.title} accuracy`} />
+            <Label muted size={11}>
+              Based on {weak.attempts} distinct questions · a learning signal.
+            </Label>
+          </Card>
+        </View>
       )}
       {daily.questions.length > 0 && (
-        <Section title="In today’s set">
-          <Label muted>
-            {Array.from(new Set(daily.questions.map((q) => q.subject))).join(
-              " · ",
-            )}
-          </Label>
-          <Label size={13} muted>
-            Overdue mistakes come first, then new questions and scheduled
-            reviews.
-          </Label>
-        </Section>
+        <View style={{ gap: 15 }}>
+          <View style={styles.between}>
+            <Label strong size={20}>
+              Up next
+            </Label>
+            <Label size={12} muted>
+              {daily.questions.length} remaining
+            </Label>
+          </View>
+          {daily.questions.map((q, i) => (
+            <Pressable
+              key={q.id}
+              accessibilityRole="button"
+              accessibilityLabel={`Practise ${q.subject}: ${q.prompt}`}
+              onPress={() => onPractice(q)}
+              style={({ pressed }) => ({
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 13,
+                borderBottomWidth: 1,
+                borderColor: t.border,
+                gap: 13,
+                opacity: pressed ? 0.6 : 1,
+                minHeight: 70,
+              })}
+            >
+              <View
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 12,
+                  backgroundColor: t.accentSoft,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Label strong size={13} color={t.accent}>
+                  {String(i + 1).padStart(2, "0")}
+                </Label>
+              </View>
+              <View style={{ flex: 1, gap: 3 }}>
+                <Label strong size={15}>
+                  {q.subject}
+                </Label>
+                <Label size={12} muted>
+                  {q.outcomes.map((o) => o.title).join(" · ") || q.difficulty}
+                </Label>
+              </View>
+              <ChevronRight size={18} color={t.muted} />
+            </Pressable>
+          ))}
+        </View>
       )}
-      <Button quiet title="Set a daily reminder" onPress={onReminders} />
-      <Label muted size={13}>
-        Original sample questions · IMAT, TOLC-I & TOLC-F practice
-      </Label>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Set a daily reminder"
+        onPress={onReminders}
+        style={({ pressed }) => ({
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 12,
+          paddingVertical: 12,
+          minHeight: 60,
+          opacity: pressed ? 0.6 : 1,
+        })}
+      >
+        <Bell size={21} color={t.accent} />
+        <View style={{ flex: 1 }}>
+          <Label strong size={14}>
+            Find your daily rhythm
+          </Label>
+          <Label muted size={12}>
+            Choose a reminder time that works for you.
+          </Label>
+        </View>
+        <ChevronRight size={18} color={t.muted} />
+      </Pressable>
+      <View style={styles.inline}>
+        <BookOpen size={14} color={t.muted} />
+        <Label muted size={11}>
+          Original sample questions · {daily.exam} practice
+        </Label>
+      </View>
     </Screen>
   );
 }

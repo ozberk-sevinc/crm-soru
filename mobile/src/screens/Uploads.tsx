@@ -1,5 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, View } from "react-native";
+import {
+  ArrowLeft,
+  Check,
+  FileArchive,
+  FileCheck2,
+  FolderUp,
+  ShieldCheck,
+  X,
+} from "lucide-react-native";
+import {
+  Badge,
+  Display,
+  EmptyState,
+  Eyebrow,
+  IconTile,
+} from "../components/ui";
 import * as Crypto from "expo-crypto";
 import {
   Button,
@@ -31,40 +47,70 @@ function PackageCard({
   const t = useTheme();
   return (
     <Card>
-      <Label
-        strong
-        color={
-          item.status === "rejected"
-            ? t.danger
+      <View style={styles.between}>
+        <IconTile
+          icon={item.status === "approved" ? FileCheck2 : FileArchive}
+          tone={item.status === "rejected" ? "danger" : "neutral"}
+        />
+        <Badge
+          tone={
+            item.status === "approved"
+              ? "success"
+              : item.status === "rejected"
+                ? "danger"
+                : "warning"
+          }
+        >
+          {item.status === "pending"
+            ? "Awaiting review"
             : item.status === "approved"
-              ? t.accent
-              : t.gold
-        }
-      >
-        {item.status.toUpperCase()}
-      </Label>
+              ? "Published"
+              : "Rejected"}
+        </Badge>
+      </View>
       <Label size={21} strong>
         {item.title}
       </Label>
-      <Label>
-        {item.question_count} questions · {item.outcome_count} kazanımlar
-      </Label>
-      <Label muted>
+      <Label size={13} muted>
         {item.exams.join(" · ")} · {item.uploader_name}
       </Label>
-      <Label size={13} muted>
-        Submitted {new Date(item.created_at).toLocaleString()}
+      <View style={{ flexDirection: "row", gap: 24, paddingVertical: 8 }}>
+        <View>
+          <Display size={25}>{item.question_count}</Display>
+          <Label size={11} muted>
+            questions
+          </Label>
+        </View>
+        <View>
+          <Display size={25}>{item.outcome_count}</Display>
+          <Label size={11} muted>
+            kazanımlar
+          </Label>
+        </View>
+      </View>
+      <Label size={11} muted>
+        Submitted {new Date(item.created_at).toLocaleDateString()}
       </Label>
-      {!!item.review_note && <Label>Admin note: {item.review_note}</Label>}
+      {!!item.review_note && (
+        <Label size={14}>Admin note: {item.review_note}</Label>
+      )}
       {item.status === "pending" && (
-        <Label size={13} muted>
-          Waiting for approval. These questions are not in practice yet.
+        <Label size={12} muted>
+          These questions enter practice after admin approval.
         </Label>
       )}
-      {onOpen && <Button title="Review this package" quiet onPress={onOpen} />}
+      {onOpen && (
+        <Button
+          title="Review this package"
+          quiet
+          icon={ShieldCheck}
+          onPress={onOpen}
+        />
+      )}
     </Card>
   );
 }
+
 function UploadComposer({
   token,
   onSubmitted,
@@ -124,13 +170,13 @@ function UploadComposer({
   }
   return (
     <Card>
-      <Label size={22} strong>
-        Submit a question package
-      </Label>
+      <IconTile icon={FolderUp} />
+      <Display size={25}>Good questions deserve to be shared.</Display>
       <Label muted>
         Upload one ZIP, choose a folder, or select its JSON files. Each package
         must follow the question-bank format, including answers and kazanımlar.
       </Label>
+      <Eyebrow>NAME YOUR PACKAGE</Eyebrow>
       <Field
         accessibilityLabel="Question package title"
         placeholder="Package title, e.g. IMAT Biology · Week 2"
@@ -144,12 +190,14 @@ function UploadComposer({
       />
       <Button
         quiet
+        icon={FileArchive}
         title="Choose ZIP or JSON files"
         disabled={busy || uncertain}
         onPress={() => void pick(false)}
       />
       <Button
         quiet
+        icon={FolderUp}
         title="Choose question folder"
         disabled={busy || uncertain}
         onPress={() => void pick(true)}
@@ -185,7 +233,7 @@ function UploadComposer({
         loading={busy}
         onPress={() => void submit()}
       />
-      <Label muted size={13}>
+      <Label muted size={12}>
         Up to 8 MiB · 100 JSON files · JSON only, no PDF extraction. Folder
         selection depends on your file provider; ZIP upload is the fallback.
       </Label>
@@ -229,13 +277,28 @@ export function Uploads({
       onRefresh={() => void refresh()}
       ListHeaderComponent={
         <View style={{ gap: 20, marginBottom: 16 }}>
-          <Button quiet title="Back to account" onPress={onBack} />
-          <Section eyebrow="Contribute, then review" title="Question uploads">
+          <Button
+            quiet
+            icon={ArrowLeft}
+            title="Back to account"
+            onPress={onBack}
+          />
+          <Section
+            eyebrow="Build the question bank"
+            title="Share what you know."
+          >
             <Label muted>
               Your packages become available to students after an admin approves
               them.
             </Label>
           </Section>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            {["01 · Upload", "02 · Review", "03 · Publish"].map((step) => (
+              <View key={step} style={{ flex: 1 }}>
+                <Badge>{step}</Badge>
+              </View>
+            ))}
+          </View>
           <UploadComposer
             token={token}
             onSubmitted={(item) => {
@@ -243,7 +306,12 @@ export function Uploads({
               void refresh();
             }}
           />
-          {success && <Label strong>{success}</Label>}
+          {success && (
+            <View accessibilityLiveRegion="polite">
+              <Badge tone="success">Submitted for review</Badge>
+              <Label size={14}>{success}</Label>
+            </View>
+          )}
           {error && (
             <ErrorNotice message={error} onRetry={() => void refresh()} />
           )}
@@ -253,9 +321,11 @@ export function Uploads({
       }
       ListEmptyComponent={
         !busy ? (
-          <Card>
-            <Label muted>No packages submitted yet.</Label>
-          </Card>
+          <EmptyState
+            icon={FileArchive}
+            title="Your first contribution."
+            message="Choose your question files above. You can follow their review status here."
+          />
         ) : null
       }
       renderItem={({ item }) => <PackageCard item={item} />}
@@ -274,41 +344,77 @@ function QuestionPreview({
     q.type === "numeric"
       ? `${q.answer.value} (tolerance ${q.answer.tolerance ?? 0})`
       : `${q.answer.option_id}. ${options.find((o) => o.id === q.answer.option_id)?.text ?? ""}`;
+  const t = useTheme();
   return (
     <Card>
-      <Label muted size={13}>
-        {q.id} · {q.exam} · {q.subject} · {q.difficulty}
+      <View style={styles.between}>
+        <Badge>{q.subject}</Badge>
+        <Eyebrow>{q.exam}</Eyebrow>
+      </View>
+      <Label muted size={11}>
+        {q.id} · {q.difficulty}
       </Label>
-      <Label strong size={20}>
+      <Label strong size={21}>
         {q.prompt}
       </Label>
       {options.map((o) => (
-        <View key={o.id} style={{ gap: 4 }}>
-          <Label>
-            {o.id}. {o.text}
-          </Label>
+        <View
+          key={o.id}
+          style={{
+            padding: 12,
+            gap: 5,
+            backgroundColor:
+              o.id === q.answer.option_id ? t.accentSoft : t.background,
+            borderRadius: 12,
+          }}
+        >
+          <View style={styles.between}>
+            <Label size={14} strong={o.id === q.answer.option_id}>
+              {o.id}. {o.text}
+            </Label>
+            {o.id === q.answer.option_id && (
+              <Check size={18} color={t.accent} />
+            )}
+          </View>
           {o.misconception && (
-            <Label muted size={13}>
+            <Label muted size={12}>
               Wrong-answer hint: {o.misconception}
             </Label>
           )}
         </View>
       ))}
-      <Label strong>Correct answer: {answer}</Label>
-      <Label>{q.explanation}</Label>
+      <View
+        style={{
+          gap: 8,
+          borderTopWidth: 1,
+          borderColor: t.border,
+          paddingTop: 15,
+        }}
+      >
+        <Label strong size={14}>
+          Correct answer: {answer}
+        </Label>
+        <Label size={14}>{q.explanation}</Label>
+      </View>
+      <Eyebrow>CONNECTED KAZANIMLAR</Eyebrow>
       {q.outcome_ids.map((id) => {
         const o = detail.bank.outcomes.find((o) => o.id === id);
         return (
-          <View key={id}>
-            <Label strong>{o?.title ?? id}</Label>
-            <Label size={14}>{o?.remember}</Label>
+          <View key={id} style={{ gap: 5 }}>
+            <Label strong size={14}>
+              {o?.title ?? id}
+            </Label>
+            <Label size={13} muted>
+              {o?.remember}
+            </Label>
           </View>
         );
       })}
     </Card>
   );
 }
-function PackageReview({
+
+export function PackageReview({
   token,
   detail,
   onBack,
@@ -319,6 +425,7 @@ function PackageReview({
   onBack: () => void;
   onReviewed: () => void;
 }) {
+  const t = useTheme();
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -368,6 +475,7 @@ function PackageReview({
         <View style={{ gap: 20, marginBottom: 16 }}>
           <Button
             quiet
+            icon={ArrowLeft}
             title="Back to review queue"
             disabled={busy}
             onPress={onBack}
@@ -378,11 +486,23 @@ function PackageReview({
               questions · {detail.summary.exams.join(" / ")}
             </Label>
           </Section>
+          <View style={styles.inline}>
+            <ShieldCheck size={20} color={t.accent} />
+            <Label size={14}>
+              Inspect the answers, explanations, and kazanımlar before your
+              decision.
+            </Label>
+          </View>
+          <Label muted size={13}>
+            Uploaded files: {detail.summary.files.join(", ")}
+          </Label>
+        </View>
+      }
+      ListFooterComponent={
+        <View style={{ marginTop: 20 }}>
           {detail.summary.status === "pending" ? (
             <Card>
-              <Label strong>
-                Review the questions, explanations and kazanımlar below.
-              </Label>
+              <Label strong>Ready to make a decision?</Label>
               <Field
                 accessibilityLabel="Admin review note"
                 placeholder="Reason for rejection or optional approval note"
@@ -394,11 +514,14 @@ function PackageReview({
               />
               {error && <ErrorNotice message={error} />}
               <Button
+                icon={Check}
                 title="Approve and publish"
                 loading={busy}
                 onPress={() => confirm("approved")}
               />
               <Button
+                icon={X}
+                tone="danger"
                 title="Reject package"
                 quiet
                 disabled={busy}
@@ -411,9 +534,6 @@ function PackageReview({
               <Label>{detail.summary.review_note || "No admin note."}</Label>
             </Card>
           )}
-          <Label muted size={13}>
-            Uploaded files: {detail.summary.files.join(", ")}
-          </Label>
         </View>
       }
       renderItem={({ item }) => (
@@ -484,12 +604,24 @@ export function ReviewQueue({
       ]}
       ListHeaderComponent={
         <View style={{ gap: 20, marginBottom: 16 }}>
-          <Button quiet title="Back to account" onPress={onBack} />
-          <Section eyebrow="Admin" title="Question approval queue">
+          <Button
+            quiet
+            icon={ArrowLeft}
+            title="Back to account"
+            onPress={onBack}
+          />
+          <Section eyebrow="Admin workspace" title="Quality starts here.">
             <Label muted>
               Inspect every package before it becomes available for practice.
             </Label>
           </Section>
+          <Card tint>
+            <Eyebrow>PENDING YOUR REVIEW</Eyebrow>
+            <Display size={40}>
+              {items.filter((i) => i.status === "pending").length}
+            </Display>
+            <Label size={13}>Packages waiting to join the question bank.</Label>
+          </Card>
           <Button
             quiet
             title={all ? "Show pending only" : "Include reviewed packages"}

@@ -4,7 +4,6 @@ import {
   Alert,
   AppState,
   BackHandler,
-  Pressable,
   View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -45,6 +44,7 @@ import { Mistakes } from "./src/screens/Mistakes";
 import { Performance } from "./src/screens/Performance";
 import { Uploads, ReviewQueue } from "./src/screens/Uploads";
 import { signOutGoogle } from "./src/lib/google";
+import { AppHeader, BottomNav } from "./src/components/chrome";
 import { Settings } from "./src/screens/Settings";
 
 type Tab =
@@ -318,35 +318,13 @@ function Application() {
   else {
     content = (
       <View style={{ flex: 1 }}>
-        <View style={{ padding: 16, gap: 12 }}>
-          <Label size={18} strong>
-            Otranto Soru
-          </Label>
-          <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
-            {(["IMAT", "TOLC-I", "TOLC-F"] as Exam[]).map((e) => (
-              <Pressable
-                key={e}
-                accessibilityRole="radio"
-                accessibilityLabel={`${e} practice`}
-                accessibilityState={{ checked: e === exam, disabled: busy }}
-                disabled={busy}
-                onPress={() => void selectExam(e)}
-                style={({ pressed }) => ({
-                  minHeight: 48,
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  borderRadius: 10,
-                  backgroundColor: e === exam ? t.accentSoft : t.surface,
-                  borderWidth: 1,
-                  borderColor: e === exam ? t.accent : t.border,
-                  opacity: pressed ? 0.7 : 1,
-                })}
-              >
-                <Label strong={e === exam}>{e}</Label>
-              </Pressable>
-            ))}
-          </View>
-        </View>
+        <AppHeader
+          exam={exam}
+          onExam={(next) => void selectExam(next)}
+          busy={busy}
+          name={student.name}
+          onAccount={() => setTab("settings")}
+        />
         {error && (
           <View style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
             <ErrorNotice message={error} onRetry={() => void refresh()} />
@@ -396,51 +374,13 @@ function Application() {
             </Screen>
           )}
         </View>
-        <View
-          style={{
-            borderTopWidth: 1,
-            borderColor: t.border,
-            padding: 8,
-            flexDirection: "row",
-            flexWrap: "wrap",
-            backgroundColor: t.surface,
+        <BottomNav
+          tab={tab}
+          onTab={(id) => {
+            setTab(id);
+            void refresh();
           }}
-        >
-          {(
-            [
-              ["today", "Today"],
-              ["mistakes", "Mistakes"],
-              ["progress", "Progress"],
-              ["settings", "Account"],
-            ] as const
-          ).map(([id, title]) => (
-            <Pressable
-              key={id}
-              accessibilityRole="tab"
-              accessibilityLabel={title}
-              accessibilityState={{ selected: tab === id }}
-              onPress={() => {
-                setTab(id);
-                void refresh();
-              }}
-              style={({ pressed }) => ({
-                flexGrow: 1,
-                minWidth: 80,
-                minHeight: 52,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 8,
-                backgroundColor: tab === id ? t.accentSoft : t.surface,
-                opacity: pressed ? 0.7 : 1,
-                borderRadius: 8,
-              })}
-            >
-              <Label size={14} strong={tab === id}>
-                {title}
-              </Label>
-            </Pressable>
-          ))}
-        </View>
+        />
       </View>
     );
   }

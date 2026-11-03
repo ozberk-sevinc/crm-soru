@@ -1,4 +1,20 @@
 import React, { useEffect, useState } from "react";
+import {
+  Bell,
+  BookOpen,
+  FolderUp,
+  LogOut,
+  ShieldCheck,
+  SlidersHorizontal,
+} from "lucide-react-native";
+import {
+  ActionRow,
+  Badge,
+  Display,
+  Eyebrow,
+  IconTile,
+  useTheme,
+} from "../components/ui";
 import { Linking, View } from "react-native";
 import {
   Button,
@@ -25,6 +41,7 @@ export function Settings({
   onUploads: () => void;
   onReview: () => void;
 }) {
+  const t = useTheme();
   const [reminder, setReminder] = useState<Reminder>({
     enabled: false,
     hour: 19,
@@ -64,43 +81,80 @@ export function Settings({
   }
   return (
     <Screen>
-      <Card>
-        <Label strong size={22}>
-          Questions & contributions
+      <Section eyebrow="Your study space" title="Make it yours.">
+        <Label muted size={14}>
+          A rhythm that works for you.
         </Label>
-        <Button title="Upload a question package" onPress={onUploads} />
+      </Section>
+      <Card>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              borderRadius: 20,
+              backgroundColor: t.accentSoft,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Display size={24}>
+              {student.name
+                .split(" ")
+                .filter(Boolean)
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase()}
+            </Display>
+          </View>
+          <View style={{ flex: 1, gap: 5 }}>
+            <Label strong size={22}>
+              {student.name}
+            </Label>
+            <Label muted size={12}>
+              {student.email || student.timezone}
+            </Label>
+            <Badge>
+              {student.role === "admin" ? "Admin account" : "Student account"}
+            </Badge>
+          </View>
+        </View>
+      </Card>
+      <View style={{ gap: 3 }}>
+        <Eyebrow>QUESTIONS & CONTRIBUTIONS</Eyebrow>
+        <ActionRow
+          icon={FolderUp}
+          title="Upload a question package"
+          subtitle="ZIP, folder, or multiple JSON files"
+          onPress={onUploads}
+        />
         {student.role === "admin" && (
-          <Button
+          <ActionRow
+            icon={ShieldCheck}
             title="Review pending question packages"
-            quiet
+            subtitle="Approve the questions that join the bank"
             onPress={onReview}
           />
         )}
-        <Label muted size={13}>
-          {student.email ? `Signed in as ${student.email}` : student.name} ·{" "}
-          {student.role}
-        </Label>
-      </Card>
-      <Section eyebrow={student.name} title="Your daily rhythm">
-        <Label muted>Account timezone: {student.timezone}</Label>
-      </Section>
+      </View>
       <Card>
-        <Label strong size={22}>
-          A gentle nudge to practise
-        </Label>
-        <Label>
-          Choose when your phone reminds you to answer your daily questions.
-          Reminders use your phone’s local time and work without opening the
-          app.
-        </Label>
-        <Label strong>
-          {reminder.enabled
-            ? `Enabled at ${String(reminder.hour).padStart(2, "0")}:${String(reminder.minute).padStart(2, "0")}`
-            : "Reminders are off"}
+        <View style={styles.between}>
+          <IconTile icon={Bell} />
+          <Badge tone={reminder.enabled ? "success" : "neutral"}>
+            {reminder.enabled ? "Reminder on" : "Reminder off"}
+          </Badge>
+        </View>
+        <Display size={25}>{"A little nudge.\nAt the right time."}</Display>
+        <Label muted size={14}>
+          Your phone can remind you daily, even when the app is closed. Choose a
+          time in your phone’s local timezone.
         </Label>
         <View style={styles.row}>
-          <View style={{ flex: 1 }}>
-            <Label muted>Hour (0–23)</Label>
+          <View style={{ flex: 1, gap: 7 }}>
+            <Label muted size={12}>
+              Hour · 0–23
+            </Label>
             <Field
               accessibilityLabel="Reminder hour"
               keyboardType="number-pad"
@@ -109,8 +163,10 @@ export function Settings({
               onChangeText={setHour}
             />
           </View>
-          <View style={{ flex: 1 }}>
-            <Label muted>Minute (0–59)</Label>
+          <View style={{ flex: 1, gap: 7 }}>
+            <Label muted size={12}>
+              Minute · 0–59
+            </Label>
             <Field
               accessibilityLabel="Reminder minute"
               keyboardType="number-pad"
@@ -137,6 +193,7 @@ export function Settings({
         )}
         <Button
           quiet
+          icon={SlidersHorizontal}
           title="Open notification settings"
           disabled={busy}
           onPress={() => {
@@ -147,24 +204,50 @@ export function Settings({
         />
       </Card>
       {error && <ErrorNotice message={error} />}
-      {message && <Label strong>{message}</Label>}
-      <Label muted size={13}>
-        Delivery depends on notification permission and your device settings.
-        The reminder continues every day, even after you complete a session.
+      {message && (
+        <View accessibilityLiveRegion="polite">
+          <Badge tone="success">{message}</Badge>
+        </View>
+      )}
+      <Label muted size={12}>
+        Account timezone: {student.timezone}. Delivery depends on notification
+        permission and device settings. Reminders continue after completing a
+        session.
       </Label>
-      <Card>
-        <Label strong>About your data</Label>
-        <Label size={14}>
-          Your answers, confidence, answer times and reflections are stored by
-          your consultancy’s Go API. Login tokens are kept in your phone’s
-          secure storage. Ask your consultancy to export or delete your history.
+      <View
+        style={{
+          gap: 12,
+          borderTopWidth: 1,
+          borderColor: t.border,
+          paddingTop: 23,
+        }}
+      >
+        <View style={styles.inline}>
+          <ShieldCheck color={t.accent} size={20} />
+          <Label strong size={17}>
+            Your progress, protected.
+          </Label>
+        </View>
+        <Label muted size={13}>
+          Answers, confidence, answer times and reflections are stored by your
+          consultancy. Login tokens use your phone’s secure storage. Ask your
+          consultancy to export or delete your history.
         </Label>
-        <Label size={14}>
-          This app currently includes sample questions, not official exam
-          papers. TOLC-I and TOLC-F have separate practice banks.
-        </Label>
-      </Card>
-      <Button quiet title="Sign out" disabled={busy} onPress={onLogout} />
+        <View style={styles.inline}>
+          <BookOpen color={t.muted} size={17} />
+          <Label muted size={12}>
+            Original sample questions. IMAT, TOLC-I and TOLC-F have separate
+            practice banks.
+          </Label>
+        </View>
+      </View>
+      <Button
+        quiet
+        icon={LogOut}
+        title="Sign out"
+        disabled={busy}
+        onPress={onLogout}
+      />
     </Screen>
   );
 }

@@ -1,6 +1,6 @@
 # Native release QA
 
-Implementation target: Expo SDK 57 / React Native 0.86, iOS and Android. Design dials: variance **5**, motion **2**, density **4**. The visual system uses a warm neutral background, one green brand accent, semantic error colour, system typography and 4-point spacing. No animated decorative content is required. Phone/tablet content is capped at 680–720 points and bottom navigation wraps when space is limited.
+Implementation target: Expo SDK 57 / React Native 0.86, iOS and Android. Design dials: variance **7**, motion **4**, density **4**. The visual system uses warm ivory and forest green, a lime action colour on dark session panels, semantic warning/error colours, system typography, and consistent spacing. Native-driver entrance transitions last 240 ms; press feedback is immediate. Reduce Motion is read and observed so nonessential transforms can be removed. Phone/tablet content is capped at 680–724 points, with system safe areas and a four-item navigation bar.
 
 Automated Go tests, TypeScript checks and JS bundle exports do not replace these native checks. Run on small and large phones, a tablet/window, light and dark mode, and large text.
 

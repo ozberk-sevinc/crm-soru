@@ -20,3 +20,14 @@ Before release, rerun `npm audit`, review the advisories in the actual build env
 ## Not verified here
 
 No native device or simulator screenshots, VoiceOver/TalkBack run, actual daily notification delivery, signed APK/AAB/IPA, App Store/TestFlight upload, Play Store submission, or production backend deployment has been completed. Those require the native runtime, hosting endpoint and relevant project/signing accounts. Follow `docs/device-qa.md` and the README build steps.
+
+
+## Study interface redesign
+
+- Rebuilt shared visual tokens, typography, icon navigation, press states, reduced-motion-aware entrance transitions, and light/dark themes.
+- Redesigned sign-in, daily session, both question types, answer feedback/reflection, mistake notebook, progress and kazanım map, reminders/account, uploads, admin queue, and question package inspection.
+- Moved package decisions after the question previews and kept server-side approval, rejection, authentication, grading, and pending-answer handling intact.
+- TypeScript, existing answer-validation tests, formatting, and Android/iOS JavaScript/Hermes exports passed locally. The Expo dependency check passed against the installed SDK map in offline mode after the online check hit a proxy timeout.
+- Browser checks rendered all 12 preview views at 736px and 320px, exercised light/dark and reduced motion, and verified answer grading, reflection save, upload status, rejection-reason validation, admin approval, and simulated Google entry with no runtime errors.
+- Backend code was unchanged. The Go toolchain was unavailable in this local session; backend verification runs in GitHub Actions.
+- Native devices/signing and production OAuth credentials are still required for release QA; the browser preview uses demo adapters.
